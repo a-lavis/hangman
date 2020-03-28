@@ -61,7 +61,7 @@
 
 
 
-(define guess-nd
+(define guess
   (lambda (letter state)
     (define newhlmaker
       (lambda (wl hl)
@@ -80,25 +80,27 @@
 	newmistakes
 	))))
 
-(define game (init-state '(s c h e m e)))
-(print-state game)
-
-(define guess!
-  (lambda (letter)
-    (set! game (guess-nd letter game))
-    (print-state game)
-    (cond ((lost? game)
-	   (printf "you lost\n\n")
-	   (exit))
-	  ((won? game)
-	   (printf "you won!\n\n")
-	   (exit)))))
-
 (define play-loop
-  (lambda ()
+  (lambda (game)
     (printf "hey you, take a guess:  ")
-    (guess! (read))
-    (newline)
-    (play-loop)))
+    (let* ((letter (read))
+	   (update-game (guess letter game)))
+      (print-state update-game)
+      (cond ((lost? update-game)
+	     (printf "you lost\n\n"))
+	    ((won? update-game)
+	     (printf "you won!\n\n"))
+	    (else
+	      (newline)
+	      (play-loop update-game))))))
 
-(play-loop)
+(define start-game
+  (lambda ()
+    ;; todo:
+    ;;   (printf "give me a word:  ")
+    ;; then replace hardcoded word with (read)
+    (let ((game (init-state '(s c h e m e))))
+      (print-state game)
+      (play-loop game))))
+
+(start-game)

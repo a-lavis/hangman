@@ -35,7 +35,7 @@
       ;; won/lost/keep playing
       (cond ((lost? game) 0) ;; 0 == lost
 	    ((won?  game) 1) ;; 1 == won
-	    (else          2) ;; 2 == still playing
+	    (else         2) ;; 2 == still playing
 	    )
       ;; what letters you've gotten
       (get-letters game)

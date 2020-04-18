@@ -23,20 +23,14 @@
 
 (define print-letters
   (lambda (state)
-    (define acc
-      (lambda (wl hl)
-	(cond ((null? wl) void)
-	      ((= (car hl) 1)
-	       (printf " ~A " (car wl))
-	       (acc (cdr wl) (cdr hl)))
-	      (else
-		(printf " _ ")
-		(acc (cdr wl) (cdr hl)))
-	      )))
-    (acc (get-wordlist state) (get-hitlist state))
+    (map (lambda (w h)
+	   (if (= h 1)
+	     (printf " ~A " w)
+	     (printf " _ ")))
+	 (get-wordlist state) (get-hitlist state))
     (newline)
     ))
-
+    
 (define print-state
   (lambda (state)
     (newline)

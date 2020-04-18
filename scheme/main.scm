@@ -7,7 +7,7 @@
 ;; INPUT: WORD, a word (represented as what? a string?).
 ;; OUTPUT: The list of letters in that word.
 ;; -----------------------
-;; for now I am just hard-coding in the word in "main.scm",
+;; for now I am just hard-coding in the word in "run.scm",
 ;; so this function is incomplete.
 (define wtwl
   (lambda (word) word))
@@ -51,13 +51,10 @@
       (make-state
 	wordlist
 	((if mem
-	   (letrec ((newhlmaker
-		      (lambda (wl hl)
-			(if (null? wl) '()
-			  (let ((hit (if (eq? letter (car wl)) 1 (car hl))))
-			    (cons hit (newhlmaker (cdr wl) (cdr hl))))
-			  ))))
-	     (lambda (hitlist) (newhlmaker wordlist hitlist)))
+	   (lambda (hitlist)
+	     (map (lambda (w h)
+		    (if (eq? letter w) 1 h))
+		  wordlist hitlist))
 	   identity)
 	 (get-hitlist state))
 	(+ (get-mistakes state) (if mem 0 1))

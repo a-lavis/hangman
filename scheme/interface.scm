@@ -16,18 +16,6 @@
   (lambda (word)
     (set! game (init-state word))))
 
-;; helper function for guess!
-(define get-letters
-  (lambda (state)
-    (define rm
-      (lambda (l1 l2)
-	(cond ((null? l1) l1)
-	      ((= (car l2) 1)
-	       (cons (first l1) (rm (rest l1) (rest l2))))
-	      (else
-		(cons '_ (rm (rest l1) (rest l2)))))))
-    (rm (get-wordlist state) (get-hitlist state))))
-
 (define guess!
   (lambda (letter)
     (set! game (guess letter game))
@@ -38,6 +26,8 @@
 	    (else         2) ;; 2 == still playing
 	    )
       ;; what letters you've gotten
-      (get-letters game)
+      (map (lambda (w h)
+	   (if (= h 1) w '_))
+	 (get-wordlist game) (get-hitlist game))
       ;; how many mistakes you've made
       (get-mistakes game))))

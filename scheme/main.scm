@@ -46,20 +46,20 @@
 ;; ------------------------------------------------------------------
 (define guess
   (lambda (letter state)
-    (define newhlmaker
-      (lambda (wl hl)
-	(cond ((null? wl) '())
-	      ((eq? letter (car wl)) (cons 1 (newhlmaker (cdr wl) (cdr hl))))
-	      (else (cons (car hl) (newhlmaker (cdr wl) (cdr hl))))
-	      )))
-    (let* ((newhitlist (newhlmaker (get-wordlist state) (get-hitlist state)))
-	   (newmistakes (if (member letter (get-wordlist state))
-			  (get-mistakes state)
-			  (+ (get-mistakes state) 1)))
-	   )
+    (let* ((wordlist (get-wordlist state))
+	   (mem (member letter wordlist)))
       (make-state
-	(get-wordlist state)
-	newhitlist
-	newmistakes
+	wordlist
+	((if mem
+	   (letrec ((newhlmaker
+		      (lambda (wl hl)
+			(if (null? wl) '()
+			  (let ((hit (if (eq? letter (car wl)) 1 (car hl))))
+			    (cons hit (newhlmaker (cdr wl) (cdr hl))))
+			  ))))
+	     (lambda (hitlist) (newhlmaker wordlist hitlist)))
+	   identity)
+	 (get-hitlist state))
+	(+ (get-mistakes state) (if mem 0 1))
 	))))
 ;; ------------------------------------------------------------------

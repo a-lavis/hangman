@@ -47,16 +47,15 @@
 (define guess
   (lambda (letter state)
     (let* ((wordlist (get-wordlist state))
-	   (mem (member letter wordlist)))
+           (mem (member letter wordlist)))
       (make-state
-	wordlist
-	((if mem
-	   (lambda (hitlist)
-	     (map (lambda (w h)
-		    (if (eq? letter w) 1 h))
-		  wordlist hitlist))
-	   identity)
-	 (get-hitlist state))
-	(+ (get-mistakes state) (if mem 0 1))
-	))))
+        wordlist
+        (let ((hitlist (get-hitlist state)))
+          (if mem
+            (map (lambda (w h)
+                   (if (eq? letter w) 1 h))
+                 wordlist hitlist)
+            hitlist))
+        (+ (get-mistakes state) (if mem 0 1))
+        ))))
 ;; ------------------------------------------------------------------

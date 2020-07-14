@@ -7,7 +7,7 @@
 ;; INPUT: WORD, a word (represented as what? a string?).
 ;; OUTPUT: The list of letters in that word.
 ;; -----------------------
-;; for now I am just hard-coding in the word in "run.scm",
+;; for now I am just hard-coding the word as a list,
 ;; so this function is incomplete.
 (define wtwl
   (lambda (word) word))
